@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#MISE description="Lint, format-check, typecheck, and production-build"
+#MISE depends=["lint", "build"]
+
+set -euo pipefail
+
+hk fix --all --check
