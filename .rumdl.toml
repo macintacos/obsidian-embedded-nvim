@@ -1,6 +1,5 @@
-# rumdl config — scaffolded with `rumdl init`, then customized. rumdl lints AND
-# formats Markdown (one tool): `rumdl check` lints, `rumdl fmt` formats; hk drives
-# both via Builtins.rumdl. Reference: https://rumdl.dev
+# rumdl lints AND formats Markdown (one tool): `rumdl check` lints, `rumdl fmt`
+# formats; hk drives both via Builtins.rumdl. Reference: https://rumdl.dev
 [global]
 # MD013 (line length) stays on rather than joining these: reflow rewraps prose to fit.
 disable = ["MD033", "MD034"]

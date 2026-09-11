@@ -16,10 +16,10 @@ HK_MISE = 1
 hk  = "latest"
 pkl = "latest"
 
-"aqua:google/yamlfmt" = "latest" # YAML format
+"aqua:google/yamlfmt" = "latest"
 taplo                 = "latest" # TOML format + lint (config in taplo.toml)
-shellcheck            = "latest" # Shell lint
-shfmt                 = "latest" # Shell format
+shellcheck            = "latest"
+shfmt                 = "latest"
 rumdl                 = "latest" # Markdown lint + format (config in .rumdl.toml)
 
 # tsc is a project dev dependency, run via `bunx`.

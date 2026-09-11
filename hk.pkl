@@ -4,10 +4,6 @@ import "package://github.com/jdx/hk/releases/download/v1.56.0/hk@1.56.0#/Builtin
 
 // Keep the amends/import version in lockstep with the `hk` version in mise.toml,
 // and only pin a version mise can actually install (`mise ls-remote hk`).
-//
-// Two mappings keep the mise tasks single-purpose:
-//   mise run format -> the `fix` hook   -> `formatters` (write mode)
-//   mise run lint   -> the `check` hook -> `linters` (read-only rule checks)
 
 local biomeGlob = List("**/*.{js,jsx,mjs,cjs,ts,tsx,json,jsonc}")
 
