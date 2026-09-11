@@ -1,5 +1,5 @@
-import obsidianmd from "eslint-plugin-obsidianmd";
 import { defineConfig, globalIgnores } from "eslint/config";
+import obsidianmd from "eslint-plugin-obsidianmd";
 
 // biome owns format and general lint; eslint keeps only the Obsidian review-bot rules.
 const obsidianRulesOnly = (config) => ({
@@ -10,6 +10,8 @@ const obsidianRulesOnly = (config) => ({
 });
 
 export default defineConfig(
+  // main.js is the build output; this config is outside the tsconfig project `projectService`
+  // needs. Widening hk's eslint glob to .mjs also needs `--no-warn-ignored`.
   globalIgnores(["main.js", "eslint.config.mjs"]),
   {
     languageOptions: {

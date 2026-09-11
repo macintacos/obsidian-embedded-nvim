@@ -1,5 +1,4 @@
 [settings]
-# Commit mise.lock for reproducible, checksum-pinned tool versions.
 lockfile = true
 
 # Route mise's npm: backend through bun (it defaults to npm and never picks bun
@@ -17,15 +16,13 @@ HK_MISE = 1
 hk  = "latest"
 pkl = "latest"
 
-# The cross-language baseline — recommended in EVERY project.
 "aqua:google/yamlfmt" = "latest" # YAML format
 taplo                 = "latest" # TOML format + lint (config in taplo.toml)
 shellcheck            = "latest" # Shell lint
 shfmt                 = "latest" # Shell format
 rumdl                 = "latest" # Markdown lint + format (config in .rumdl.toml)
 
-# TypeScript: bun runs and bundles, biome formats and lints. tsc is a project
-# dev dependency instead, run via `bunx`.
+# tsc is a project dev dependency, run via `bunx`.
 bun   = "latest"
 biome = "latest"
 

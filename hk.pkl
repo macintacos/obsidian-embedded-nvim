@@ -8,17 +8,16 @@ import "package://github.com/jdx/hk/releases/download/v1.56.0/hk@1.56.0#/Builtin
 // Two mappings keep the mise tasks single-purpose:
 //   mise run format -> the `fix` hook   -> `formatters` (write mode)
 //   mise run lint   -> the `check` hook -> `linters` (read-only rule checks)
-// The `pre-commit` hook runs BOTH, so every commit stays formatted and clean.
-//
-// Step keys use a uniform `Language(Action)  [[builtins.tool]]` scheme,
-// column-aligned on the bracket tag, so hk's per-run output reads consistently.
+
+local biomeGlob = List("**/*.{js,jsx,mjs,cjs,ts,tsx,json,jsonc}")
+
+local tsLint = "TS(Lint)          [[builtins.biome]]"
 
 // Formatters — rewrite files into canonical form.
 local formatters = new Mapping<String, Step> {
-  // rumdl owns Markdown — one tool for both lint and format. The format step runs
-  // `rumdl fmt` (applies fixes, formatter exit codes — won't fail the commit on
-  // leftover lint). yamlfmt owns YAML, taplo TOML.
+  // check_diff nulled: hk prefers it (+ `git apply`) over `fix`, so `rumdl fmt` would never run.
   ["Markdown(Format)  [[builtins.rumdl]]"] = (Builtins.rumdl) {
+    check_diff = null
     check = "rumdl fmt --check {{ files }}"
     fix = "rumdl fmt {{ files }}"
   }
@@ -31,7 +30,11 @@ local formatters = new Mapping<String, Step> {
 
   ["Shell(Format)     [[builtins.shfmt]]"] = Builtins.shfmt
 
-  ["TS(Format)        [[builtins.biome]]"] = Builtins.biome
+  ["TS(Format)        [[builtins.biome]]"] = (Builtins.biome) {
+    glob = biomeGlob
+    check = "biome format --no-errors-on-unmatched {{ files }}"
+    fix = "biome format --write --no-errors-on-unmatched {{ files }}"
+  }
 }
 
 // Linters — check rules without rewriting.
@@ -41,17 +44,22 @@ local linters = new Mapping<String, Step> {
   // Same tool, read-only lint: `rumdl check` reports violations (exit 1);
   // pre-commit autofixes via the builtin's `rumdl check --fix`. Config: .rumdl.toml.
   ["Markdown(Lint)    [[builtins.rumdl]]"] = (Builtins.rumdl) {
+    check_diff = null
     check = "rumdl check {{ files }}"
   }
 
   ["TOML(Lint)        [[builtins.taplo]]"] = Builtins.taplo
 
   // pkl lints by evaluating the file (`pkl eval`), which resolves the remote
-  // amends/import package (cached after first run). Exclude template/fixture
-  // .pkl files you don't want evaluated.
+  // amends/import package (cached after first run).
   ["Pkl(Lint)         [[builtins.pkl]]"] = Builtins.pkl
 
-  ["TS(Lint)          [[builtins.biome]]"] = Builtins.biome
+  // Not `biome lint`: that drops biome's assist pass, which is what flags unsorted imports.
+  [tsLint] = (Builtins.biome) {
+    glob = biomeGlob
+    check = "biome check --formatter-enabled=false --no-errors-on-unmatched {{ files }}"
+    fix = "biome check --formatter-enabled=false --write --no-errors-on-unmatched {{ files }}"
+  }
 
   ["TS(Type)          [[builtins.tsc]]"] = (Builtins.tsc) {
     check = "bunx tsc --noEmit -p {{workspace_indicator}}"
@@ -59,9 +67,9 @@ local linters = new Mapping<String, Step> {
 
   // Obsidian review-bot rules only; most are `warn`, and hk hides passing-step output.
   ["TS(Obsidian)      [[builtins.eslint]]"] = (Builtins.eslint) {
-    depends = List("TS(Lint)          [[builtins.biome]]")
-    check = "bunx eslint --max-warnings=0 {{files}}"
-    fix = "bunx eslint --fix --max-warnings=0 {{files}}"
+    depends = List(tsLint)
+    check = "bunx eslint --max-warnings=0 {{ files }}"
+    fix = "bunx eslint --fix --max-warnings=0 {{ files }}"
   }
 }
 

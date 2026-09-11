@@ -6,9 +6,6 @@ set -euo pipefail
 
 # Obsidian provides these at runtime; a bundled copy breaks CodeMirror facet identity.
 externals=(obsidian electron '@codemirror/*' '@lezer/*' 'node:*')
-while IFS= read -r builtin; do
-  externals+=("$builtin")
-done < <(bun -e 'for (const m of require("node:module").builtinModules) console.log(m)')
 
 args=(src/main.ts --format=cjs --target=browser --outfile=main.js "${externals[@]/#/--external=}")
 
