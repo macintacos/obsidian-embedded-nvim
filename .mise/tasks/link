@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+#MISE description="Install this checkout into the dev vault as a symlinked plugin"
+#MISE depends=["build"]
+
+set -euo pipefail
+
+if [ -z "${OBSIDIAN_DEV_VAULT:-}" ]; then
+  echo "link: OBSIDIAN_DEV_VAULT unset — skipping (see README § Development)" >&2
+  exit 0
+fi
+
+if [ ! -d "$OBSIDIAN_DEV_VAULT/.obsidian" ]; then
+  echo "link: $OBSIDIAN_DEV_VAULT is not an Obsidian vault (no .obsidian/)" >&2
+  exit 1
+fi
+
+plugins="$OBSIDIAN_DEV_VAULT/.obsidian/plugins"
+id="$(jq -r .id "$MISE_PROJECT_ROOT/manifest.json")"
+
+mkdir -p "$plugins"
+# One vault, one plugin folder: whichever worktree links last owns it.
+ln -sfn "$MISE_PROJECT_ROOT" "$plugins/$id"
+echo "link: $plugins/$id -> $MISE_PROJECT_ROOT"
