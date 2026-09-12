@@ -1,5 +1,6 @@
 {
   "name": "embedded-nvim",
+  "private": true,
   "description": "Embed Neovim in the editor for real Vim motions and modes.",
   "author": "Julian Torres",
   "license": "MIT",
