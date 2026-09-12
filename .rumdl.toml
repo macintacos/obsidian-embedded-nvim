@@ -1,0 +1,25 @@
+# rumdl lints AND formats Markdown (one tool): `rumdl check` lints, `rumdl fmt`
+# formats; hk drives both via Builtins.rumdl. Reference: https://rumdl.dev
+[global]
+# MD013 (line length) stays on rather than joining these: reflow rewraps prose to fit.
+disable = ["MD033", "MD034"]
+
+respect-gitignore = true
+
+exclude = [
+  ".git",
+  ".github",
+  "node_modules",
+  "vendor",
+  "dist",
+  "build",
+  "CHANGELOG.md",
+  "LICENSE.md",
+]
+
+[MD013]
+line-length = 90
+reflow      = true
+reflow-mode = "normalize"
+code-spans  = false
+code-blocks = false

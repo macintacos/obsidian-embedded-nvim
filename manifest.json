@@ -1,0 +1,10 @@
+{
+  "id": "embedded-nvim",
+  "name": "Embedded Nvim",
+  "version": "0.1.0",
+  "minAppVersion": "1.14.1",
+  "description": "Embed Neovim in the editor for real Vim motions and modes.",
+  "author": "Julian Torres",
+  "authorUrl": "https://github.com/macintacos",
+  "isDesktopOnly": false
+}

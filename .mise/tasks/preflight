@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+#MISE description="Lint, format-check, typecheck, and production-build"
+#MISE depends=["lint", "build"]
+
+set -euo pipefail
+
+hk fix --all --check
+
+# obsidianmd/validate-manifest can never fire: its visitor wants a JS object-expression
+# AST, so it sees nothing under eslint's JSON language. These are the submission rules
+# Obsidian's review bot actually rejects on.
+jq -e '
+  (.id | test("^[a-z0-9-]+$"))
+  and ([.id, .name, .description] | all(test("obsidian|plugin"; "i") | not))
+  and (.description | length >= 10 and length <= 250)
+  and (.description | test("^[A-Z]") and endswith("."))
+  and ([.version, .minAppVersion] | all(test("^[0-9]+\\.[0-9]+\\.[0-9]+$")))
+  and (.isDesktopOnly | type == "boolean")
+' manifest.json >/dev/null || {
+  echo "manifest.json fails Obsidian's submission rules" >&2
+  exit 1
+}

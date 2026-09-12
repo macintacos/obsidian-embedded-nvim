@@ -1,0 +1,31 @@
+[settings]
+lockfile = true
+
+# Route mise's npm: backend through bun (it defaults to npm and never picks bun
+# on its own); bun stays in [tools] so it's installed.
+npm.package_manager = "bun"
+
+# HK_MISE routes hk's git-hook subprocesses through `mise x`, so each hook step
+# uses the versions pinned below — even for committers who never activated mise.
+[env]
+HK_MISE = 1
+
+[tools]
+# hk evaluates hk.pkl through pkl, so both are required. pkl also powers the
+# Pkl(Format) / Pkl(Lint) steps (`pkl format` and `pkl eval`).
+hk  = "1.56.0" # keep in step with hk.pkl's amends/import pin
+pkl = "latest"
+
+"aqua:google/yamlfmt" = "latest"
+taplo                 = "latest" # TOML format + lint (config in taplo.toml)
+shellcheck            = "latest"
+shfmt                 = "latest"
+rumdl                 = "latest" # Markdown lint + format (config in .rumdl.toml)
+
+# tsc is a project dev dependency, run via `bunx`.
+bun   = "latest"
+biome = "latest"
+
+# (Re)register git hooks whenever tools are installed or updated.
+[hooks]
+postinstall = "hk install --mise"

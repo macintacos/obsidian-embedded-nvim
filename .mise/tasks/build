@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#MISE description="Bundle src/main.ts into main.js for Obsidian (minified; --watch for dev)"
+#USAGE flag "-w --watch" help="Rebuild on change with an inline sourcemap"
+
+set -euo pipefail
+
+# Obsidian provides these at runtime; a bundled copy breaks CodeMirror facet identity.
+externals=(obsidian electron '@codemirror/*' '@lezer/*' 'node:*')
+
+args=(src/main.ts --format=cjs --target=browser --outfile=main.js "${externals[@]/#/--external=}")
+
+if [ "${usage_watch:-false}" = "true" ]; then
+  exec bun build "${args[@]}" --watch --sourcemap=inline
+fi
+exec bun build "${args[@]}" --minify

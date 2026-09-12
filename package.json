@@ -1,0 +1,15 @@
+{
+  "name": "embedded-nvim",
+  "private": true,
+  "description": "Embed Neovim in the editor for real Vim motions and modes.",
+  "author": "Julian Torres",
+  "license": "MIT",
+  "repository": "github:macintacos/obsidian-embedded-nvim",
+  "devDependencies": {
+    "eslint": "^9",
+    "eslint-plugin-obsidianmd": "^0.4.2",
+    "obsidian": "^1.13.1",
+    "typescript": "~6.0",
+    "typescript-eslint": "^8.70.0"
+  }
+}
