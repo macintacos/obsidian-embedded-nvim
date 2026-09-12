@@ -20,7 +20,10 @@ local formatters = new Mapping<String, Step> {
 
   ["YAML(Format)      [[builtins.yamlfmt]]"] = Builtins.yamlfmt
 
-  ["TOML(Format)      [[builtins.taplo_format]]"] = Builtins.taplo_format
+  // check_diff nulled for the same reason as rumdl above: hk prefers it over `fix`.
+  ["TOML(Format)      [[builtins.taplo_format]]"] = (Builtins.taplo_format) {
+    check_diff = null
+  }
 
   ["Pkl(Format)       [[builtins.pkl_format]]"] = Builtins.pkl_format
 

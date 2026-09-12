@@ -33,6 +33,10 @@ jobs:
         run: |
           tag="${GITHUB_REF#refs/tags/}"
 
+          # Obsidian requires the tag to equal manifest.version exactly, and the bump is
+          # manual — catch a mismatch before the draft release exists.
+          jq -e --arg t "$tag" '.version == $t' manifest.json >/dev/null
+
           gh release create "$tag" \
             --title="$tag" \
             --draft \
